@@ -33,6 +33,10 @@ module.exports = (env = {}) => {
             filename: '[name]',
             path: path.resolve(__dirname, 'dist')
         },
+        watch: (() => {
+            if (isProduction) return false
+            else return true
+        })(),
         module: {
             rules: [{
                     test: /\.scss$/,
@@ -125,13 +129,13 @@ module.exports = (env = {}) => {
                     new UglifyJSPlugin({
                         sourceMap: true
                     }),
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                    new CleanWebpackPlugin(pathsToClean, cleanOptions)
                 ]
             } else {
                 return [
                     ExtractCSS,
                     ExtractSCSS,
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                    new CleanWebpackPlugin(pathsToClean, cleanOptions)
                 ]
             }
         })(),
