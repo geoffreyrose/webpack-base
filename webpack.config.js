@@ -143,7 +143,7 @@ module.exports = (env = {}) => {
                         host: 'localhost',
                         port: 3000,
                         // server: { baseDir: ['public'] },
-                        proxy: 'http://localhost:8888/'
+                        proxy: 'http://localhost:8000'
                     })
                 ]
             }

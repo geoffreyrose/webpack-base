@@ -1,15 +1,14 @@
 {
-  "name": "test-webpack",
+  "name": "webpack-base",
   "version": "1.0.0",
-  "description": "",
+  "description": "Base for Webpack Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "webpack --env.local",
     "build:dist": "webpack --env.production"
   },
   "keywords": [],
-  "author": "",
+  "author": "Geoffrey Rose (github.com/geoffreyrose)",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.34",
@@ -32,7 +31,6 @@
   },
   "dependencies": {
     "foundation-sites": "^6.4.4-rc1",
-    "jquery": "^3.3.1",
-    "lodash": "^4.17.4"
+    "jquery": "^3.3.1"
   }
 }
