@@ -1,10 +1,11 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const ExtractCSS = new ExtractTextPlugin("css-style.css");
-const ExtractSCSS = new ExtractTextPlugin("scss-style.css");
+const ExtractCSS = new ExtractTextPlugin("css/css-style.[hash:8].css"); 
+const ExtractSCSS = new ExtractTextPlugin("css/scss-style.[hash:8].css");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env = {}) => {
     const isProduction = env.production === true;
@@ -28,10 +29,11 @@ module.exports = (env = {}) => {
             else return 'source-map'
         })(),
         entry: {
-            'app.js': './src/index.js'
+            'js/app': './src/js/index.js',
+            'js/vender': './src/js/vender.js'
         },
         output: {
-            filename: '[name]',
+            filename: '[name].[hash:8].js', // [name].[hash].js'
             path: path.resolve(__dirname, 'dist')
         },
         watch: (() => {
@@ -130,7 +132,10 @@ module.exports = (env = {}) => {
                     new UglifyJSPlugin({
                         sourceMap: true
                     }),
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions)
+                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                    new CopyWebpackPlugin([
+                        {from:'src/img',to:'images'}
+                    ]),
                 ]
             } else {
                 return [
@@ -144,7 +149,10 @@ module.exports = (env = {}) => {
                         port: 3000,
                         // server: { baseDir: ['public'] },
                         proxy: 'http://localhost:8000'
-                    })
+                    }),
+                    new CopyWebpackPlugin([
+                        {from:'src/img',to:'img'}
+                    ]),
                 ]
             }
         })(),
