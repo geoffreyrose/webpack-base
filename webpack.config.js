@@ -4,6 +4,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const ExtractCSS = new ExtractTextPlugin("css-style.css");
 const ExtractSCSS = new ExtractTextPlugin("scss-style.css");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = (env = {}) => {
     const isProduction = env.production === true;
@@ -135,7 +136,15 @@ module.exports = (env = {}) => {
                 return [
                     ExtractCSS,
                     ExtractSCSS,
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions)
+                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                    new BrowserSyncPlugin({
+                        // browse to http://localhost:3000/ during development,
+                        // ./public directory is being served
+                        host: 'localhost',
+                        port: 3000,
+                        // server: { baseDir: ['public'] },
+                        proxy: 'http://localhost:8888/'
+                    })
                 ]
             }
         })(),
