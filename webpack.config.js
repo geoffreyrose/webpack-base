@@ -1,8 +1,8 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const ExtractCSS = new ExtractTextPlugin("css/css-style.[hash:8].css"); 
-const ExtractSCSS = new ExtractTextPlugin("css/scss-style.[hash:8].css");
+const ExtractCSS = new ExtractTextPlugin("css/css-style.[contenthash:8].css");
+const ExtractSCSS = new ExtractTextPlugin("css/scss-style.[contenthash:8].css");
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -33,7 +33,7 @@ module.exports = (env = {}) => {
             'js/vender': './src/js/vender.js'
         },
         output: {
-            filename: '[name].[hash:8].js', // [name].[hash].js'
+            filename: '[name].[chunkhash:8].js', // [name].[hash].js'
             path: path.resolve(__dirname, 'dist')
         },
         watch: (() => {
@@ -135,7 +135,7 @@ module.exports = (env = {}) => {
                     new CleanWebpackPlugin(pathsToClean, cleanOptions),
                     new CopyWebpackPlugin([
                         {from:'src/img',to:'images'}
-                    ]),
+                    ])
                 ]
             } else {
                 return [
@@ -152,7 +152,7 @@ module.exports = (env = {}) => {
                     }),
                     new CopyWebpackPlugin([
                         {from:'src/img',to:'img'}
-                    ]),
+                    ])
                 ]
             }
         })(),
