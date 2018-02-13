@@ -49,41 +49,51 @@ module.exports = (env = {}) => {
                                 loader: 'css-loader',
 
                                 options: (() => {
+                                    let options = {
+                                        includePaths: [
+                                            path.resolve("node_modules/foundation-sites/scss")
+                                        ]
+                                    };
+
                                     if (isProduction) {
-                                        return {
-                                            minimize: true || { /* CSSNano Options */ },
-                                            includePaths: [
-                                                path.resolve("node_modules/foundation-sites/scss")
-                                            ]
-                                        }
+                                        Object.assign(options,
+                                            {
+                                                minimize: true || { /* CSSNano Options */ }
+                                            }
+                                        );
                                     } else {
-                                        return {
-                                            sourceMap: true,
-                                            includePaths: [
-                                                path.resolve("node_modules/foundation-sites/scss")
-                                            ]
-                                        }
+                                        Object.assign(options,
+                                            {
+                                                sourceMap: true
+                                            }
+                                        );
                                     }
+                                    return options;
                                 })()
                             },
                             {
                                 loader: 'sass-loader',
                                 options: (() => {
+                                    let options = {
+                                        includePaths: [
+                                            path.resolve("node_modules/foundation-sites/scss")
+                                        ]
+                                    };
+
                                     if (isProduction) {
-                                        return {
-                                            minimize: true || { /* CSSNano Options */ },
-                                            includePaths: [
-                                                path.resolve("node_modules/foundation-sites/scss")
-                                            ]
-                                        }
+                                        Object.assign(options,
+                                            {
+                                                minimize: true || { /* CSSNano Options */ }
+                                            }
+                                        );
                                     } else {
-                                        return {
-                                            sourceMap: true,
-                                            includePaths: [
-                                                path.resolve("node_modules/foundation-sites/scss")
-                                            ]
-                                        }
+                                        Object.assign(options,
+                                            {
+                                                sourceMap: true
+                                            }
+                                        );
                                     }
+                                    return options;
                                 })()
                             }
                         ],
@@ -125,36 +135,38 @@ module.exports = (env = {}) => {
         },
 
         plugins: (() => {
+            let options = [
+                ExtractCSS,
+                ExtractSCSS,
+                new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                new CopyWebpackPlugin([
+                    {from:'src/img',to:'images'}
+                ])
+            ];
             if (isProduction) {
-                return [
-                    ExtractCSS,
-                    ExtractSCSS,
+                options.push(
                     new UglifyJSPlugin({
                         sourceMap: true
-                    }),
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
-                    new CopyWebpackPlugin([
-                        {from:'src/img',to:'images'}
-                    ])
-                ]
+                    })
+                );
             } else {
-                return [
-                    ExtractCSS,
-                    ExtractSCSS,
-                    new CleanWebpackPlugin(pathsToClean, cleanOptions),
+                options.push(
                     new BrowserSyncPlugin({
                         // browse to http://localhost:3000/ during development,
                         // ./public directory is being served
                         host: 'localhost',
                         port: 3000,
                         // server: { baseDir: ['public'] },
-                        proxy: 'http://localhost:8000'
-                    }),
-                    new CopyWebpackPlugin([
-                        {from:'src/img',to:'img'}
-                    ])
-                ]
+                        proxy: 'http://localhost:8000/',
+                        files: [
+                            '**/*.html',
+                            '**/*.php'
+                        ]
+                    })
+                );
             }
+
+            return options;
         })(),
 
     }
