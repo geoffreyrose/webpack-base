@@ -49,11 +49,7 @@ module.exports = (env = {}) => {
                                 loader: 'css-loader',
 
                                 options: (() => {
-                                    let options = {
-                                        includePaths: [
-                                            path.resolve("node_modules/foundation-sites/scss")
-                                        ]
-                                    };
+                                    let options = {};
 
                                     if (isProduction) {
                                         Object.assign(options,
@@ -62,11 +58,7 @@ module.exports = (env = {}) => {
                                             }
                                         );
                                     } else {
-                                        Object.assign(options,
-                                            {
-                                                sourceMap: true
-                                            }
-                                        );
+                                        Object.assign(options,{});
                                     }
                                     return options;
                                 })()
@@ -81,11 +73,7 @@ module.exports = (env = {}) => {
                                     };
 
                                     if (isProduction) {
-                                        Object.assign(options,
-                                            {
-                                                minimize: true || { /* CSSNano Options */ }
-                                            }
-                                        );
+                                        Object.assign(options,{});
                                     } else {
                                         Object.assign(options,
                                             {
