@@ -15,8 +15,8 @@
     "last 2 versions",
     "ie >= 9",
     "Safari >= 9",
-    "ios_saf >= 9"
-
+    "iOS >= 9",
+    "Firefox ESR"
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.34",
@@ -26,6 +26,7 @@
     "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.23.5",
     "browser-sync-webpack-plugin": "^1.2.0",
+    "browserslist": "^3.1.0",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.3.1",
     "css-loader": "^0.28.7",
