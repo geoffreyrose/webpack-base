@@ -11,8 +11,12 @@
   "author": "Geoffrey Rose (github.com/geoffreyrose)",
   "license": "ISC",
   "browserslist": [
-    "> 2%",
-    "ie >= 9"
+    "> 0.5%",
+    "last 2 versions",
+    "ie >= 9",
+    "Safari >= 9",
+    "ios_saf >= 9"
+
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.34",
