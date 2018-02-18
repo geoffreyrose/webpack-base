@@ -8,7 +8,9 @@ import { test3 } from './functions-2';
         the_functions.test1();
         the_functions.test2();
         test3();
+        setTimeout(() => {
+            $('h1').text('Goodbye!');
+        }, 2000);
 
-        $('h1').text('Goodbye');
     });
 })(jQuery);

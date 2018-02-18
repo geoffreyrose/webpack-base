@@ -1,8 +1,8 @@
+const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const ExtractCSS = new ExtractTextPlugin("css/css-style.[contenthash:8].css");
-const ExtractSCSS = new ExtractTextPlugin("css/scss-style.[contenthash:8].css");
+const ExtractStyles = new ExtractTextPlugin("css/styles.css"); // [contenthash:8]
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -30,10 +30,14 @@ module.exports = (env = {}) => {
         })(),
         entry: {
             'js/app': './src/js/index.js',
+            'js/css': [
+                './src/js/css.js',
+                'webpack-hot-middleware/client'
+            ],
             'js/vender': './src/js/vender.js'
         },
         output: {
-            filename: '[name].[chunkhash:8].js', // [name].[hash].js'
+            filename: '[name].js', // [name].[hash].js'
             path: path.resolve(__dirname, 'dist')
         },
         watch: (() => {
@@ -44,13 +48,15 @@ module.exports = (env = {}) => {
             rules: [
                 {
                     test: /\.scss$/,
-                    use: ExtractSCSS.extract({
+                    use: ExtractStyles.extract({
                         fallback: 'style-loader',
                         use: [{
                                 loader: 'css-loader',
 
                                 options: (() => {
-                                    let options = {};
+                                    let options = {
+                                        url: false
+                                    };
 
                                     if (isProduction) {
                                         Object.assign(options,
@@ -59,10 +65,18 @@ module.exports = (env = {}) => {
                                             }
                                         );
                                     } else {
-                                        Object.assign(options,{});
+                                        Object.assign(options,{
+                                            sourceMap: true
+                                        });
                                     }
                                     return options;
                                 })()
+                            },
+                            {
+                                loader: 'postcss-loader',
+                                options: {
+                                    sourceMap: true
+                                }
                             },
                             {
                                 loader: 'sass-loader',
@@ -89,22 +103,6 @@ module.exports = (env = {}) => {
                     })
                 },
                 {
-                    test: /\.css$/,
-                    use: ExtractCSS.extract({
-                        fallback: "style-loader",
-                        use: [{
-                            loader: 'css-loader',
-                            options: (() => {
-                                if (isProduction) {
-                                    return {
-                                        minimize: true || { /* CSSNano Options */ }
-                                    }
-                                }
-                            })()
-                        }, ]
-                    })
-                },
-                {
                     test: /\.(png|svg|jpg|gif)$/,
                     use: [
                         'file-loader'
@@ -125,8 +123,7 @@ module.exports = (env = {}) => {
 
         plugins: (() => {
             let options = [
-                ExtractCSS,
-                ExtractSCSS,
+                ExtractStyles,
                 new CleanWebpackPlugin(pathsToClean, cleanOptions),
                 new CopyWebpackPlugin([
                     {from:'src/img',to:'images'}
@@ -140,19 +137,28 @@ module.exports = (env = {}) => {
                 );
             } else {
                 options.push(
-                    new BrowserSyncPlugin({
-                        // browse to http://localhost:3000/ during development,
-                        // ./public directory is being served
-                        host: 'localhost',
-                        port: 3000,
-                        // server: { baseDir: ['public'] },
-                        proxy: 'http://localhost:8000/',
-                        files: [
-                            '**/*.html',
-                            '**/*.php',
-                            '**/*.pug'
-                        ]
-                    })
+                    new webpack.HotModuleReplacementPlugin(),
+                    new BrowserSyncPlugin(
+                        {
+                            // browse to http://localhost:3000/ during development,
+                            // ./public directory is being served
+                            host: 'localhost',
+                            port: 3000,
+                            // server: { baseDir: ['public'] },
+                            proxy: 'http://dev.webpack/',
+                            files: [
+                                // files to watch and reload (or hot reload if .css) when changed
+                                '**/*.html',
+                                '**/*.php',
+                                '**/*.pug',
+                                'src/**/*.js',
+                                'dist/**/*.css' // Only watch if final compiled css changes, this allows the css to be live injected without a page reload
+                            ]
+                        },
+                        {
+                            reload: false
+                        }
+                    )
                 );
             }
 

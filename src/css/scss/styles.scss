@@ -21,5 +21,10 @@
 @import 'components/footer';
 @import 'components/table';
 
+
+
+body {
+    background: green;
+}
 /// injected CSS message
 #__bs_notify__ {display: none !important;}
